@@ -54,12 +54,6 @@ describe("Element Data Attributes Tests", function() {
     expect(sliderSelectionWidthAtMaxValue).toBe(0);
   });
 
-  it("reads the 'data-slider-tooltip' property and sets it on slider", function() {
-    slider = $("#tooltipSlider").slider();
-    var tooltipIsHidden = $("#tooltipSlider").siblings("div.tooltip").hasClass("hide");
-    expect(tooltipIsHidden).toBeTruthy();
-  });
-
   it("reads the 'data-slider-handle' property and sets it on slider", function() {
     slider = $("#handleSlider").slider();
     var handleIsSetToTriangle = $("#handleSlider").siblings("div.slider-track").children("div.slider-handle").hasClass("triangle");

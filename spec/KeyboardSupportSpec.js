@@ -27,64 +27,6 @@ describe("Keyboard Support Tests", function() {
     });
   });
 
-  describe("When slider handle has TAB focus", function() {
-
-    it("should display it's tooltip if 'tooltip' option is set to 'show'", function() {
-      testSlider = $("#testSlider1").slider({
-        id: 'testSlider',
-        tooltip: 'show'
-      });
-      handle1 = $("#testSlider").find(".slider-track > .slider-handle:first");
-
-      // Check for no tooltip before focus
-      var tooltipIsShown = $("#testSlider").find("div.tooltip").hasClass("in");
-      expect(tooltipIsShown).toBeFalsy();
-      
-      handle1.focus();
-
-      // Tooltip should be present after focus
-      tooltipIsShown = $("#testSlider").find("div.tooltip").hasClass("in");
-      expect(tooltipIsShown).toBeTruthy();
-    });
-
-    it("should not display it's tooltip if 'tooltip' option is set to 'hide'", function() {
-      testSlider = $("#testSlider1").slider({
-        id: 'testSlider',
-        tooltip: 'hide'
-      });
-      handle1 = $("#testSlider").find(".slider-track > .slider-handle:first");
-
-      // Check for hidden tooltip before focus
-      var tooltipIsHidden = $("#testSlider1").siblings("div.tooltip").hasClass("hide");
-      expect(tooltipIsHidden).toBeTruthy();
-      
-      handle1.focus();
-
-      // Tooltip should remain hidden after focus
-      tooltipIsHidden = $("#testSlider1").siblings("div.tooltip").hasClass("hide");
-      expect(tooltipIsHidden).toBeTruthy();
-    });
-
-    it("should not affect the tooltip display if 'tooltip' option is set to 'always'", function() {
-      testSlider = $("#testSlider1").slider({
-        id: 'testSlider',
-        tooltip: 'always'
-      });
-      handle1 = $("#testSlider").find(".slider-track > .slider-handle:first");
-
-      // Check for shown tooltip before focus
-      var tooltipIsShown = $("#testSlider1").siblings("div.tooltip").hasClass("in");
-      expect(tooltipIsShown).toBeTruthy();
-      
-      handle1.focus();
-
-      // Tooltip should remain present after focus
-      tooltipIsShown = $("#testSlider1").siblings("div.tooltip").hasClass("in");
-      expect(tooltipIsShown).toBeTruthy();
-    });
-  });
-
-
   describe("For horizontal sliders where its handle has focus", function() {
 
     beforeEach(function() {

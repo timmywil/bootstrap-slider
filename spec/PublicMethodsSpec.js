@@ -124,76 +124,12 @@ describe("Public Method Tests", function() {
       expect(sliderSelectionHeightAtMaxValue).toBe(0);
     });
 
-    it("reads and sets the 'formater' option properly", function() {
-      var tooltipFormater = function(value) {
-        return 'Current value: ' + value;
-      };
-
-      testSlider = $("#testSlider1").slider({
-        formater : tooltipFormater
-      });
-      testSlider.slider('setValue', 9);
-
-      var tooltipMessage = $("#testSlider1").siblings("div.tooltip").children("div.tooltip-inner").text();
-      expect(tooltipMessage).toBe("Current value: 9");
-    });
-
     it("reads and sets the 'enabled' option properly", function() {
       testSlider = $("#testSlider1").slider({
         enabled: false
       });
       var isEnabled = testSlider.slider('isEnabled');
       expect(isEnabled).not.toBeTruthy();
-    });
-
-    describe("reads and sets the 'tooltip' option properly", function() {
-      it("tooltip is not shown if set to 'hide'", function() {
-        testSlider = $("#testSlider1").slider({
-          tooltip : "hide"
-        });
-        
-        var tooltipIsHidden = $("#testSlider1").siblings("div.tooltip").hasClass("hide");
-        expect(tooltipIsHidden).toBeTruthy();
-      });
-
-      it("tooltip is shown during sliding if set to 'show'", function() {
-        testSlider = $("#testSlider1").slider({
-          tooltip : "show"
-        });
-
-        var tooltipIsHidden = !($("#testSlider1").siblings("div.tooltip").hasClass("in"));
-        expect(tooltipIsHidden).toBeTruthy();
-
-        // Trigger hover
-        $("#testSlider1").trigger('mouseenter');
-        
-        var tooltipIsShownAfterSlide = $("#testSlider1").siblings("div.tooltip").hasClass("in");
-        expect(tooltipIsShownAfterSlide).toBeTruthy();
-      });
-
-      it("tooltip is always shown if set to 'always'", function() {
-        testSlider = $("#testSlider1").slider({
-          tooltip : "always"
-        });
-        
-        var tooltipIsShown = $("#testSlider1").siblings("div.tooltip").hasClass("in");
-        expect(tooltipIsShown).toBeTruthy();
-      });
-
-      it("defaults to 'show' option if invalid value is passed", function() {
-        testSlider = $("#testSlider1").slider({
-          tooltip : "invalid option value"
-        });
-
-        var tooltipIsHidden = !($("#testSlider1").siblings("div.tooltip").hasClass("in"));
-        expect(tooltipIsHidden).toBeTruthy();
-
-        // Trigger hover
-        $("#testSlider1").trigger('mouseenter');
-        
-        var tooltipIsShownOnHover = $("#testSlider1").siblings("div.tooltip").hasClass("in");
-        expect(tooltipIsShownOnHover).toBeTruthy();
-      });
     });
   });
 

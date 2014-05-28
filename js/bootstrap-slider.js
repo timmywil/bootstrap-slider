@@ -42,9 +42,6 @@
 									'<div class="slider-handle"></div>'+
 									'<div class="slider-handle"></div>'+
 								'</div>'+
-								'<div id="tooltip" class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'+
-								'<div id="tooltip_min" class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'+
-								'<div id="tooltip_max" class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'+
 							'</div>')
 								.insertBefore(this.element)
 								.append(this.element);
@@ -59,25 +56,10 @@
 			this.touchCapable = true;
 		}
 
-		var tooltip = this.element.data('slider-tooltip')||options.tooltip;
-
-		this.tooltip = this.picker.find('#tooltip');
-		this.tooltipInner = this.tooltip.find('div.tooltip-inner');
-
-		this.tooltip_min = this.picker.find('#tooltip_min');
-		this.tooltipInner_min = this.tooltip_min.find('div.tooltip-inner');
-
-		this.tooltip_max = this.picker.find('#tooltip_max');
-		this.tooltipInner_max= this.tooltip_max.find('div.tooltip-inner');
-
 		if (updateSlider === true) {
 			// Reset classes
 			this.picker.removeClass('slider-horizontal');
 			this.picker.removeClass('slider-vertical');
-			this.tooltip.removeClass('hide');
-			this.tooltip_min.removeClass('hide');
-			this.tooltip_max.removeClass('hide');
-
 		}
 
 		this.orientation = this.element.data('slider-orientation')||options.orientation;
@@ -87,9 +69,6 @@
 				this.stylePos = 'top';
 				this.mousePos = 'pageY';
 				this.sizePos = 'offsetHeight';
-				this.tooltip.addClass('right')[0].style.left = '100%';
-				this.tooltip_min.addClass('right')[0].style.left = '100%';
-				this.tooltip_max.addClass('right')[0].style.left = '100%';
 				break;
 			default:
 				this.picker
@@ -99,9 +78,6 @@
 				this.stylePos = 'left';
 				this.mousePos = 'pageX';
 				this.sizePos = 'offsetWidth';
-				this.tooltip.addClass('top')[0].style.top = -this.tooltip.outerHeight() - 14 + 'px';
-				this.tooltip_min.addClass('top')[0].style.top = -this.tooltip_min.outerHeight() - 14 + 'px';
-				this.tooltip_max.addClass('top')[0].style.top = -this.tooltip_max.outerHeight() - 14 + 'px';
 				break;
 		}
 
@@ -169,10 +145,6 @@
 
 		this.offset = this.picker.offset();
 		this.size = this.picker[0][this.sizePos];
-		this.formater = options.formater;
-		
-		this.tooltip_separator = options.tooltip_separator;
-		this.tooltip_split = options.tooltip_split;
 
 		this.setValue(this.value);
 
@@ -194,28 +166,6 @@
 			mousedown: $.proxy(this.mousedown, this)
 		});
 
-		if(tooltip === 'hide') {
-			this.tooltip.addClass('hide');
-			this.tooltip_min.addClass('hide');
-			this.tooltip_max.addClass('hide');
-		} else if(tooltip === 'always') {
-			this.showTooltip();
-			this.alwaysShowTooltip = true;
-		} else {
-			this.picker.on({
-				mouseenter: $.proxy(this.showTooltip, this),
-				mouseleave: $.proxy(this.hideTooltip, this)
-			});
-			this.handle1.on({
-				focus: $.proxy(this.showTooltip, this),
-				blur: $.proxy(this.hideTooltip, this)
-			});
-			this.handle2.on({
-				focus: $.proxy(this.showTooltip, this),
-				blur: $.proxy(this.hideTooltip, this)
-			});
-		}
-
 		this.enabled = options.enabled &&
 						(this.element.data('slider-enabled') === undefined || this.element.data('slider-enabled') === true);
 		if(this.enabled) {
@@ -231,26 +181,6 @@
 
 		over: false,
 		inDrag: false,
-
-		showTooltip: function(){
-            if (this.tooltip_split === false ){
-                this.tooltip.addClass('in');
-            } else {
-                this.tooltip_min.addClass('in');
-                this.tooltip_max.addClass('in');
-            }
-
-			this.over = true;
-		},
-
-		hideTooltip: function(){
-			if (this.inDrag === false && this.alwaysShowTooltip !== true) {
-				this.tooltip.removeClass('in');
-				this.tooltip_min.removeClass('in');
-				this.tooltip_max.removeClass('in');
-			}
-			this.over = false;
-		},
 
 		layout: function(){
 			var positionPercentages;
@@ -270,40 +200,6 @@
 			} else {
 				this.selectionElStyle.left = Math.min(positionPercentages[0], positionPercentages[1]) +'%';
 				this.selectionElStyle.width = Math.abs(positionPercentages[0] - positionPercentages[1]) +'%';
-
-                var offset_min = this.tooltip_min[0].getBoundingClientRect();
-                var offset_max = this.tooltip_max[0].getBoundingClientRect();
-
-                if (offset_min.right > offset_max.left) {
-                    this.tooltip_max.removeClass('top');
-                    this.tooltip_max.addClass('bottom')[0].style.top = 18 + 'px';
-                } else {
-                    this.tooltip_max.removeClass('bottom');
-                    this.tooltip_max.addClass('top')[0].style.top = -30 + 'px';
-                }
-			}
-
-			if (this.range) {
-				this.tooltipInner.text(
-					this.formater(this.value[0]) + this.tooltip_separator + this.formater(this.value[1])
-				);
-				this.tooltip[0].style[this.stylePos] = this.size * (positionPercentages[0] + (positionPercentages[1] - positionPercentages[0])/2)/100 - (this.orientation === 'vertical' ? this.tooltip.outerHeight()/2 : this.tooltip.outerWidth()/2) +'px';
-
-                this.tooltipInner_min.text(
-					this.formater(this.value[0])
-				);
-                this.tooltipInner_max.text(
-					this.formater(this.value[1])
-				);
-
-				this.tooltip_min[0].style[this.stylePos] = this.size * ( (positionPercentages[0])/100) - (this.orientation === 'vertical' ? this.tooltip_min.outerHeight()/2 : this.tooltip_min.outerWidth()/2) +'px';
-				this.tooltip_max[0].style[this.stylePos] = this.size * ( (positionPercentages[1])/100) - (this.orientation === 'vertical' ? this.tooltip_max.outerHeight()/2 : this.tooltip_max.outerWidth()/2) +'px';
-
-			} else {
-				this.tooltipInner.text(
-					this.formater(this.value[0])
-				);
-				this.tooltip[0].style[this.stylePos] = this.size * positionPercentages[0]/100 - (this.orientation === 'vertical' ? this.tooltip.outerHeight()/2 : this.tooltip.outerWidth()/2) +'px';
 			}
 		},
 
@@ -410,7 +306,7 @@
 			this.layout();
 
 			var val = this.calculateValue();
-			
+
 			this.element.trigger({
 					type: 'slideStart',
 					value: val
@@ -479,9 +375,6 @@
 			});
 
 			this.inDrag = false;
-			if (this.over === false) {
-				this.hideTooltip();
-			}
 			var val = this.calculateValue();
 			this.layout();
 			this.element
@@ -498,14 +391,14 @@
 			var val;
 			if (this.range) {
 				val = [this.min,this.max];
-                if (this.percentage[0] !== 0){
-                    val[0] = (Math.max(this.min, this.min + Math.round((this.diff * this.percentage[0]/100)/this.step)*this.step));
-                    val[0] = this.applyPrecision(val[0]);
-                }
-                if (this.percentage[1] !== 100){
-                    val[1] = (Math.min(this.max, this.min + Math.round((this.diff * this.percentage[1]/100)/this.step)*this.step));
-                    val[1] = this.applyPrecision(val[1]);
-                }
+				if (this.percentage[0] !== 0){
+					val[0] = (Math.max(this.min, this.min + Math.round((this.diff * this.percentage[0]/100)/this.step)*this.step));
+					val[0] = this.applyPrecision(val[0]);
+				}
+				if (this.percentage[1] !== 100){
+					val[1] = (Math.min(this.max, this.min + Math.round((this.diff * this.percentage[1]/100)/this.step)*this.step));
+					val[1] = this.applyPrecision(val[1]);
+				}
 				this.value = val;
 			} else {
 				val = (this.min + Math.round((this.diff * this.percentage[0]/100)/this.step)*this.step);
@@ -564,7 +457,7 @@
 
 			if (this.range) {
 				this.value[0] = this.applyPrecision(this.value[0]);
-				this.value[1] = this.applyPrecision(this.value[1]); 
+				this.value[1] = this.applyPrecision(this.value[1]);
 
 				this.value[0] = Math.max(this.min, Math.min(this.max, this.value[0]));
 				this.value[1] = Math.max(this.min, Math.min(this.max, this.value[1]));
@@ -738,16 +631,10 @@
 		value: 5,
 		range: false,
 		selection: 'before',
-		tooltip: 'show',
-		tooltip_separator: ':',
-		tooltip_split: false,
 		natural_arrow_keys: false,
 		handle: 'round',
 		reversed : false,
-		enabled: true,
-		formater: function(value) {
-			return value;
-		}
+		enabled: true
 	};
 
 	$.fn.slider.Constructor = Slider;
